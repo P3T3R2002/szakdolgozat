@@ -1,0 +1,2 @@
+# szakdolgozat
+Szakdolgozat: BME VIK 
