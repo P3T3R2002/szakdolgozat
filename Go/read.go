@@ -5,7 +5,7 @@ import (
 	"log"
 )
 
-func serial_read(port string, i int) {
+func serial_read(port string, _ int) {
 	mode := &serial.Mode{
 		BaudRate: 9600,
 		Parity: serial.EvenParity,
