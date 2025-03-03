@@ -1,35 +1,25 @@
 package main
 
 import (
-	"fmt",
 	"log"
+	"net"
+	"time"
+	"net/http"
 )
 
-func serial_read(port string, _ int) {
-	mode := &serial.Mode{
-		BaudRate: 9600,
-		Parity: serial.EvenParity,
-		DataBits: 7,
-		StopBits: serial.OneStopBit,
+func serial_read(IP string) {
+	dialer := &net.Dialer{
+		Timeout:   5 * time.Second,
+		KeepAlive: 10 * time.Second,
+		DualStack: true,
 	}
-	open_port, err := serial.Open(port, mode)
+	log.Println(IP)
+
+	Conn, err := dialer.Dial("tcp", IP)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
-	//---------------------------------------------------------------------
-	
-	buff := make([]byte, 100)
-	for {
-		n, err := port.Read(buff)
-		if err != nil {
-			log.Fatal(err)
-			break
-		}
-		if n == 0 {
-			fmt.Println("\nEOF")
-			break
-		}
-		fmt.Printf("%v", string(buff[:n]))
-	}
+	resp, err := http.Get(IP)
+	log.Println(resp.Header, err)
 }

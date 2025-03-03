@@ -1,53 +1,54 @@
 package main
 
 import (
-	"fmt"
 	"log"
-	"go.bug.st/serial"
+	"fmt"
+	"net/http"
+	"io/ioutil"
 )
+
+var IPAdress = [...]string{"172.28.3.249:8080", "321", "231", "..."}
 
 func main() {
 	//---------------------------------------------------------------------
-	
-	ports, err := serial.GetPortsList()
+
+	serveMux := http.NewServeMux()
+	serveMux.HandleFunc("/", getData1)
+	serveMux.HandleFunc("POST /", getData2)
+	serveMux.HandleFunc("GET /", getData3)
+
+	var server = &http.Server{
+		Addr: ":8080",
+		Handler: serveMux,
+	}
+	log.Fatal(server.ListenAndServe())
+
+	//---------------------------------------------------------------------
+}
+
+func getData1(w http.ResponseWriter, r *http.Request) {
+	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.Fatal(err)
 	}
-	if len(ports) == 0 {
-		log.Fatal("No serial ports found!")
-	}
-	for i, port := range ports {
-		go serial_read(port, i)
-	}
+	log.Printf("Body: %v", string(body))
+	fmt.Println("Hello, from server!")
+}
 
-	//---------------------------------------------------------------------
-	
-	mode := &serial.Mode{
-		BaudRate: 9600,
-		Parity: serial.EvenParity,
-		DataBits: 7,
-		StopBits: serial.OneStopBit,
-	}
-	port, err := serial.Open("?-------?", mode)
+func getData2(w http.ResponseWriter, r *http.Request) {
+	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.Fatal(err)
 	}
+	log.Printf("Body: %v", string(body))
+	fmt.Println("Hello POST, from server!")
+}
 
-	//---------------------------------------------------------------------
-		
-	buff := make([]byte, 100)
-	for {
-		n, err := port.Read(buff)
-		if err != nil {
-			log.Fatal(err)
-			break
-		}
-		if n == 0 {
-			fmt.Println("\nEOF")
-			break
-		}
-		fmt.Printf("%v", string(buff[:n]))
+func getData3(w http.ResponseWriter, r *http.Request) {
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		log.Fatal(err)
 	}
-
-	//---------------------------------------------------------------------
+	log.Printf("Body: %v", string(body))
+	fmt.Println("Hello, GET from server!")
 }
