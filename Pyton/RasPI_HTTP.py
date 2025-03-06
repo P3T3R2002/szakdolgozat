@@ -1,4 +1,5 @@
 import urllib.request
+import datetime
 import time
 import csv
 import os
@@ -21,10 +22,11 @@ def main():
 
     while True:
 
-        date = time.ctime().split(" ")
-        name_speed = f"WINDSPEED_{date[5]}_{date[1]}_{date[3]}.csv"
-        name_angle = f"WINDANGLE_{date[5]}_{date[1]}_{date[3]}.csv"
-        day = date[3]
+        date = datetime.datetime.now()
+
+        name_speed = f"WINDSPEED_{date.year}_{date.month}_{date.day}.csv"
+        name_angle = f"WINDANGLE_{date.year}_{date.month}_{date.day}.csv"
+        day = date.day
         current_day = day
 
         ROOT_DIR = os.path.abspath(os.curdir)
@@ -39,32 +41,26 @@ def main():
         angle_writer = csv.writer(angle_csv)
         angle_writer.writerow(["ANGLE", "TIME"])
 
+
         try:
             while day == current_day:
-                current_time = int(time.time()*1000)
-                if current_time % 1000 == 0:
+                current_time = datetime.datetime.now()
+                if int(current_time.microsecond/1000) % 1000 == 0:
                     angle = get_data("/windangle")
-                    angle_writer.writerow([angle, time.ctime()])
-                    print(f"Time: --> {time.ctime()}")
-                    print(f"Windangle: {angle}")
-                    print("------------------------------------------")
-                        
-                if current_time/10 % 1000 == 0:
-                    speed = get_data("/windspeed")
-                    speed_writer = csv.writer(speed_csv)
-                    speed_writer.writerow([speed, time.ctime()])
-                    print(f"Time: --> {time.ctime()}")
-                    print(f"Windspeed: {speed}")
-                    print("------------------------------------------")
+                    angle_writer.writerow([angle, int(time.time()*10)/10])
 
-                current_day = time.ctime().split(" ")[3]
+                if int(current_time.microsecond/1000) % 500 == 0:
+                    speed = get_data("/windspeed")
+                    speed_writer.writerow([speed, int(time.time()*10)/10])
+
+                current_day = current_time.day
 
         except Exception as e:
             print(f"Error encountered: {e}")
 
         speed_csv.close()
         angle_csv.close()
-        
+
 if __name__ == "__main__":
     main()
 
