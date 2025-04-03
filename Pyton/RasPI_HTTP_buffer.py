@@ -1,5 +1,4 @@
 import urllib.request
-import traceback
 import datetime
 import time
 import json
