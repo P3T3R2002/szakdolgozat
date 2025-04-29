@@ -8,3 +8,33 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+.Home, .Response{
+    display: flex;
+    justify-content: center; 
+    align-items: center;    
+    flex-direction: column;
+    text-align: center;
+    font-size: 22px;
+    background-color: aquamarine;
+}
+.container {
+    padding: 10px;
+    margin: 10px;
+    background-color: aqua;
+}
+.row {
+    padding: 10px;
+    margin: 10px;
+    background-color: chartreuse;
+
+}
+.col {
+    padding: 10px;
+    margin: 10px;
+    background-color: blue;
+
+}
+.h1 {
+    margin: 10px;
+}

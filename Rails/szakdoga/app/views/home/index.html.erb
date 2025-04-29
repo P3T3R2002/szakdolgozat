@@ -1,0 +1,59 @@
+<div class="Home"> <%# view/home/index.html.erb %>
+    <header>
+        <h1>Home</h1>
+    </header>
+    
+    <div class="container">
+        <%= form_with url: submit_date_path, method: :post, data: { turbo: false }, local: true do %>
+            <div class="row">
+                <div class="col">
+                    <div class="content">
+                        <h2>ETTŐL</h2>
+                        <div>
+                            <%= label_tag :day_from, "Day:" %>
+                            <%= select_tag :day_from, options_for_select((1..31).to_a) %>
+                        </div>
+
+                        <div>
+                            <%= label_tag :month_from, "Month:" %>
+                            <%= select_tag :month_from, options_for_select(Date::MONTHNAMES.compact.each_with_index.map { |m, i| [m, i + 1] }) %>
+                        </div>
+
+                        <div>
+                            <%= label_tag :year_from, "Year:" %>
+                            <%= select_tag :year_from, options_for_select((2025..Date.today.year).to_a.reverse) %>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="content">
+                        <h2>EDDIG</h2>
+                        <div>
+                            <%= label_tag :day_to, "Day:" %>
+                            <%= select_tag :day_to, options_for_select((1..31).to_a) %>
+                        </div>
+                        <div>
+                            <%= label_tag :month_to, "Month:" %>
+                            <%= select_tag :month_to, options_for_select(Date::MONTHNAMES.compact.each_with_index.map { |m, i| [m, i + 1] }) %>
+                        </div>
+                        <div>
+                            <%= label_tag :year_to, "Year:" %>
+                            <%= select_tag :year_to, options_for_select((2025..Date.today.year).to_a.reverse) %>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="row">
+                <div class="content">
+                    <%= label_tag :request_avg, "Num of data to 1 data", style: "display: block" %>
+                    <%= number_field_tag :request_avg, 1, required: true, style: "width: 100px;" %>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-warning">Submit</button>
+        <% end %>
+    </div>
+</div>

@@ -1,0 +1,46 @@
+<div class="Response"> <%# view/home/response.html.erb %>
+    <header>
+        <h1>Válasz</h1>
+    </header>
+    
+    <div class="container">
+        <div class="row">
+            <div class="content">
+
+                <% if @remote_data %>
+
+                    <p><b>Ettől:</b> <%= @remote_data['from_date'] %></p>
+                    <p><b>Eddig:</b> <%= @remote_data['to_date'] %></p>
+
+                <% else %>
+                    <p>No data received from the remote server.</p>
+                <% end %>
+
+            </div>
+        </div>
+
+        <h2>Válasz a Raspberry-től:</h2>
+        <div class="row">
+            <div class="content">
+                <h2>Speed Over Time</h2>
+                <% if @speed_data %> 
+                    <%= line_chart @speed_data, xtitle: "Date", ytitle: "Speed" %>
+                <% else %>
+                    <p>No data received from the remote server.</p>
+                <% end %>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="content">
+                <h2>Angle Over Time</h2>
+                <% if @angle_data %>  
+                    <%= line_chart @angle_data, xtitle: "Date", ytitle: "Angle" %>
+                <% else %>
+                    <p>No data received from the remote server.</p>
+                <% end %>
+            </div>
+        </div>
+        <%= link_to "Back", root_path %>
+    </div>
+</div>

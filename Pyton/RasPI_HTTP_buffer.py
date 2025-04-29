@@ -6,7 +6,7 @@ import csv
 import os
 
 
-STATIC_IP = "192.168.244.77"
+STATIC_IP = "192.168.0.200"
 PORT = "8080"
 FILE_PATH = "/mnt/d/Desktop/Peti/egyetem/Szakdolgozat/"
 
@@ -17,9 +17,7 @@ def get_data():
     return contents
 
 def get_date():
-    print("date_1")
     contents = urllib.request.urlopen(URL + "/date", timeout=5).read()
-    print("date_2")
     return contents
 
 def log_error(LOG_txt, e):
@@ -34,45 +32,38 @@ def main():
     LOG_txt = open(LOG_PATH, "w", newline="")
     log_error(LOG_txt, "Logging start...")
 
-
+    reference_date = time.time()-json.loads(get_date())["date"]/1000
     while True:
         try:
-            reference_date = time.time()-json.loads(get_date())["date"]/1000
+            date = datetime.datetime.now()
 
-            while True:
-                try:
-                    date = datetime.datetime.now()
+            name_speed = f"WINDSDATA_{date.year}_{date.month}_{date.day}.csv"
+            day = date.day
+            current_day = day
 
-                    name_speed = f"WINDSDATA_{date.year}_{date.month}_{date.day}.csv"
-                    day = date.day
-                    current_day = day
+            SPEED_PATH = os.path.join(ROOT_DIR, FILE_PATH+name_speed)
 
-                    SPEED_PATH = os.path.join(ROOT_DIR, FILE_PATH+name_speed)
-
-                    DATA_csv = open(SPEED_PATH, "w", newline="")
-                    DATA_writer = csv.writer(DATA_csv)
-                    DATA_writer.writerow(["SPEED", "ANGLE", "DATE"])
-                except Exception as e:
-                    log_error(LOG_txt, e)
-
-                while day == current_day:
-                    try:
-                        current_time = datetime.datetime.now()
-                        data = json.loads(get_data())
-                        data["date"] = reference_date + data["date"]/1000
-                        DATA_writer.writerow(data.values())
-
-                    except Exception as e:
-                        log_error(LOG_txt, e)
-
-                    current_day = current_time.day
-
-                print("close")
-                DATA_csv.close()
-
+            DATA_csv = open(SPEED_PATH, "w", newline="")
+            DATA_writer = csv.writer(DATA_csv)
+            DATA_writer.writerow(["SPEED", "DATE", "ANGLE"])
         except Exception as e:
-            print(e)
             log_error(LOG_txt, e)
+
+        while day == current_day:
+            try:
+                current_time = datetime.datetime.now()
+                data = json.loads(get_data())
+                data["date"] = reference_date + data["date"]/1000
+                DATA_writer.writerow(data.values())
+                print(data)
+
+            except Exception as e:
+                log_error(LOG_txt, e)
+
+            current_day = current_time.day
+
+        print("close")
+        DATA_csv.close()
 
 if __name__ == "__main__":
     main()
