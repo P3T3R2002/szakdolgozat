@@ -48,8 +48,25 @@
             </div>
             <div class="row">
                 <div class="content">
-                    <%= label_tag :request_avg, "Num of data to 1 data", style: "display: block" %>
-                    <%= number_field_tag :request_avg, 1, required: true, style: "width: 100px;" %>
+                    <div>
+                        <%= label_tag :select_action, "Action:" %>
+                        <%= select_tag :select_action, options_for_select(["Download", "Show"]), id: "action_select" %>
+                    </div>
+                    <div class="col" id="download_options" style="display: none;">
+                        <div>
+                            <%= label_tag :start_matlab, "Start MatLab" %>
+                            <%= check_box_tag :start_matlab %>
+                        </div>
+                    </div>
+                    <div class="col" id="show_options" style="display: none;">
+                        <%= label_tag :request_avg, "Num of data to 1 data", style: "display: block" %>
+                        <%= number_field_tag :request_avg, 1, required: true, style: "width: 100px;" %><br>
+                        <i>5 data/second = 1</i><br>
+                        <i>1 data/second = 5</i><br>
+                        <i>1 data/minute = 300</i><br>
+                        <i>1 data/hour = 18000</i><br>
+                        <i>1 data/day = 462000</i>
+                    </div>
                 </div>
             </div>
             
@@ -57,3 +74,22 @@
         <% end %>
     </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const actionSelect = document.getElementById("action_select");
+    const downloadOptions = document.getElementById("download_options");
+    const showOptions = document.getElementById("show_options");
+
+    function toggleOptions() {
+      const action = actionSelect.value;
+      downloadOptions.style.display = action === "Download" ? "block" : "none";
+      showOptions.style.display = action === "Show" ? "block" : "none";
+    }
+
+    actionSelect.addEventListener("change", toggleOptions);
+
+    // Initialize visibility on page load
+    toggleOptions();
+  });
+</script>

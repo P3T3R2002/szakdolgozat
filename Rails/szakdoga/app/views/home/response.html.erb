@@ -12,6 +12,16 @@
                     <p><b>Ettől:</b> <%= @remote_data['from_date'] %></p>
                     <p><b>Eddig:</b> <%= @remote_data['to_date'] %></p>
 
+                    <% if @remote_data['avg'].to_i < 5 %>
+                        <p><b>Sűrűség:</b> <%= (5/@remote_data['avg'].to_f) %> data/sec </p>
+
+                    <% elsif @remote_data['avg'].to_i < 300 %>
+                        <p><b>Sűrűség:</b> <%= (300/@remote_data['avg'].to_f) %> data/min </p>
+
+                    <% else %>
+                        <p><b>Sűrűség:</b> <%= (18000/@remote_data['avg'].to_f) %> data/hour </p>
+
+                    <% end %>
                 <% else %>
                     <p>No data received from the remote server.</p>
                 <% end %>
