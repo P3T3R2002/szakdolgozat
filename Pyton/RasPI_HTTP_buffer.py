@@ -8,7 +8,7 @@ import os
 
 STATIC_IP = "192.168.0.200"
 PORT = "8080"
-FILE_PATH = "/mnt/d/Desktop/Peti/egyetem/Szakdolgozat/"
+FILE_PATH = "/mnt/d/Desktop/Peti/egyetem/Szakdolgozat/WIND_DATA/"
 
 URL = 'http://' + STATIC_IP + ":" + PORT
 

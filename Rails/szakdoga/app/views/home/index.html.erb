@@ -25,7 +25,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="col">
                     <div class="content">
                         <h2>EDDIG</h2>
@@ -43,8 +42,6 @@
                         </div>
                     </div>
                 </div>
-
-
             </div>
             <div class="row">
                 <div class="content">
@@ -52,13 +49,17 @@
                         <%= label_tag :select_action, "Action:" %>
                         <%= select_tag :select_action, options_for_select(["Download", "Show"]), id: "action_select" %>
                     </div>
-                    <div class="col" id="download_options" style="display: none;">
+                </div>
+            </div>
+            <div class="row">
+                <div class="content">
+                    <div id="download_options" style="display: none;">
                         <div>
                             <%= label_tag :start_matlab, "Start MatLab" %>
-                            <%= check_box_tag :start_matlab %>
+                            <%= check_box_tag :start_matlab, '1', false, id: "action_check" %>
                         </div>
                     </div>
-                    <div class="col" id="show_options" style="display: none;">
+                    <div id="show_options" style="display: none;">
                         <%= label_tag :request_avg, "Num of data to 1 data", style: "display: block" %>
                         <%= number_field_tag :request_avg, 1, required: true, style: "width: 100px;" %><br>
                         <i>5 data/second = 1</i><br>
@@ -66,6 +67,14 @@
                         <i>1 data/minute = 300</i><br>
                         <i>1 data/hour = 18000</i><br>
                         <i>1 data/day = 462000</i>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="matlab_options" style="display: none;">
+                <div class="content">
+                    <div>
+                        <%= label_tag :select_matlab, "Run matlab script:" %>
+                        <%= select_tag :select_matlab, options_for_select(["winds_plot", "Show"])%>
                     </div>
                 </div>
             </div>
@@ -78,18 +87,35 @@
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const actionSelect = document.getElementById("action_select");
+    const actionCheck = document.getElementById("action_check");
+    const matlabOptions = document.getElementById("matlab_options");
     const downloadOptions = document.getElementById("download_options");
     const showOptions = document.getElementById("show_options");
 
-    function toggleOptions() {
+    function toggleSelectOptions() {
       const action = actionSelect.value;
+
+      // Uncheck the box if it was checked
+      if (actionCheck.checked) {
+        actionCheck.checked = false;
+        toggleCheckOptions();  // update display accordingly
+      }
+
       downloadOptions.style.display = action === "Download" ? "block" : "none";
       showOptions.style.display = action === "Show" ? "block" : "none";
     }
 
-    actionSelect.addEventListener("change", toggleOptions);
+    function toggleCheckOptions() {
+      const isChecked = actionCheck.checked;
+      matlabOptions.style.display = isChecked ? "block" : "none";
+    }
+
+    actionSelect.addEventListener("change", toggleSelectOptions);
+    actionCheck.addEventListener("change", toggleCheckOptions);
 
     // Initialize visibility on page load
-    toggleOptions();
+    toggleSelectOptions();
+    toggleCheckOptions();
   });
 </script>
+

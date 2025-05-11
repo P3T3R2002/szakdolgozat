@@ -83,11 +83,15 @@ class HomeController < ApplicationController
       # Pass the remote data to the view
 
       if !remote_data["data"].empty?
+        angle_data = []
+        speed_data = []
+        date_data = []
 
-        entry = remote_data["data"].first
-        angle_data = entry["data"]["ANGLE"]
-        speed_data = entry["data"]["SPEED"]
-        date_data  = entry["data"]["DATE"]
+        remote_data["data"].each do |entry|
+          angle_data += entry["data"]["ANGLE"]
+          speed_data += entry["data"]["SPEED"]
+          date_data  += entry["data"]["DATE"]
+        end
 
         # Build a hash for the chart (e.g., DATE => SPEED)
         @speed_data = speed_data.each_with_index.map do |speed, i|
@@ -133,9 +137,10 @@ class HomeController < ApplicationController
         remote_data = JSON.parse(response.body)
 
       if !remote_data["data"].empty?
-        file_path = DATA_FILE_PATH + "WINDSPEED_#{remote_data["from_date"]}_#{remote_data["to_date"]}.csv"
+        file_path = DATA_FILE_PATH + "WINDSDATA_#{remote_data["from_date"]}_#{remote_data["to_date"]}.csv"
         
         entries = []
+
         remote_data["data"].each do |file|
           entries += file["data"]
         end
@@ -151,7 +156,7 @@ class HomeController < ApplicationController
 
         flash[:notice] = "Data downloaded to #{file_path}"
         if start_matlab = params[:start_matlab]
-          run_matlab_plot(Date.new(2025, 4, 28))
+          run_matlab_plot()
         end
         redirect_to root_path
       else
@@ -166,12 +171,22 @@ class HomeController < ApplicationController
 
   #----------------------#
 
-  def run_matlab_plot(date)
-    year  = date.year
-    month = date.month
-    day   = date.day
+  def run_matlab_plot()
+    from_date = Date.new(
+      params[:year_from].to_i,
+      params[:month_from].to_i,
+      params[:day_from].to_i
+    ) rescue nil
+
+    to_date = Date.new(
+      params[:year_to].to_i,
+      params[:month_to].to_i,
+      params[:day_to].to_i
+    ) rescue nil
     
-    command = "addpath('#{SCRIPT_PATH}'); winds_plot(#{year}, #{month}, #{day}); exit;"
+    matlab = params[:select_matlab]
+
+    command = "addpath('#{SCRIPT_PATH}'); #{matlab}('#{from_date}', '#{to_date}'); exit;"
     system("#{MATLAB_PATH} -r \"#{command}\"")
 
   end
