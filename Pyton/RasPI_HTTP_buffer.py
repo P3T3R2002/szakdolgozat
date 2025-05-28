@@ -6,7 +6,7 @@ import csv
 import os
 
 
-STATIC_IP = "192.168.0.200"
+STATIC_IP = "192.168.244.200"
 PORT = "8080"
 FILE_PATH = "/mnt/d/Desktop/Peti/egyetem/Szakdolgozat/WIND_DATA/"
 

@@ -8,7 +8,7 @@ class HomeController < ApplicationController
   protect_from_forgery with: :null_session  # Prevent CSRF errors for API-style requests
   
   PORT = "5000"
-  IP = "192.168.0.201"
+  IP = "192.168.0.182"
   DATA_FILE_PATH = "/mnt/d/Desktop/Peti/egyetem/Szakdolgozat/WIND_DATA/"
   MATLAB_PATH = "/mnt/c/Peti.C/MATLAB/R2023b/bin/matlab.exe"
   SCRIPT_PATH = "D:/Desktop/Peti/egyetem/Szakdolgozat/scripts"
@@ -58,7 +58,7 @@ class HomeController < ApplicationController
 
   def send_show_request(date_data)
 
-    remote_server_ip = "http://0.0.0.0:#{PORT}"
+    remote_server_ip = "http://#{IP}:#{PORT}"
     uri = URI.join(remote_server_ip, "/show") 
 
     # Append the from_date, to_date and action as query parameters
@@ -118,7 +118,7 @@ class HomeController < ApplicationController
 
   def send_download_request(date_data)
 
-    remote_server_ip = "http://0.0.0.0:#{PORT}"
+    remote_server_ip = "http://#{IP}:#{PORT}"
     uri = URI.join(remote_server_ip, "/download") 
 
     # Append the from_date, to_date and action as query parameters
