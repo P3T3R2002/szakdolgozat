@@ -17,15 +17,14 @@ function winds_plot(fromDate, toDate)
     grid;
     ylim([0 9]);
 
-
-    t = round(size(windspeed)/5);
-    model = 'wind_part';  % your Simulink model name
-    load_system(model);  % load the model
-    set_param(model, 'SimulationMode', 'normal');
-    set_param(model, 'StopTime', sprintf('%d', t(1)));  % or whatever stop time you want
-    out = sim('wind_part', 'ReturnWorkspaceOutputs', 'on');
-
-
+    % (opcionális)
+    
+    % t = round(size(windspeed)/5);
+    % model = 'wind_part';  % Simulink model name
+    % load_system(model);  % load the model
+    % set_param(model, 'SimulationMode', 'normal');
+    % set_param(model, 'StopTime', sprintf('%d', t(1)));  
+    % out = sim(model, 'ReturnWorkspaceOutputs', 'on');
 end
 
 
