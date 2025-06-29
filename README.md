@@ -1,3 +1,4 @@
 # szakdolgozat
-Szakdolgozat: BME VIK 
+Szakdolgozat: BME VIK
+
 A szakdolgozathoz felhasznált kódók
